@@ -1,9 +1,9 @@
-pub struct Vector2<T> {
+pub struct Point<T> {
 	x: T,
 	y: T,
 }
 
-impl<T> Vector2<T> {
+impl<T> Point<T> {
 	pub fn new(x: T, y: T) -> Self {
 		Self {
 			x,
