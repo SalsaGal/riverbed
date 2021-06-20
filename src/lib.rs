@@ -1,9 +1,11 @@
 mod graphics;
 
 pub mod math;
+pub mod scene;
 
 use crate::graphics::GraphicsHandler;
 use crate::math::Point;
+use crate::scene::Scene;
 
 use winit::dpi::{LogicalSize, Size};
 use winit::event::{Event, WindowEvent};
@@ -13,10 +15,12 @@ use winit::window::{Fullscreen, Window, WindowBuilder};
 pub struct Game {
 	event_loop: EventLoop<()>,
 	window: Window,
+
+	scenes: Vec<Box<dyn Scene>>,
 }
 
 impl Game {
-	pub fn new(title: &str, size: WindowSize) -> Self {
+	pub fn new(title: &str, size: WindowSize, scene: Box<dyn Scene>) -> Self {
 		let event_loop = EventLoop::new();
 		let mut window = WindowBuilder::new().with_title(title).with_resizable(false);
 		window = match size {
@@ -29,17 +33,30 @@ impl Game {
 		Self {
 			event_loop,
 			window,
+
+			scenes: vec![scene],
 		}
 	}
 
 	pub fn run(self) {
 		let window = self.window;
 		let mut graphics = GraphicsHandler::new(&window);
+		let mut scenes = self.scenes;
 
 		self.event_loop.run(move |event, _, control_flow| {
 			match event {
 				Event::MainEventsCleared => {
 					graphics.update();
+
+					// Update scenes
+					for scene in scenes.iter_mut() {
+						scene.update();
+					}
+
+					// Render scenes
+					for scene in scenes.iter_mut() {
+						scene.render();
+					}
 				},
 				Event::WindowEvent { event: WindowEvent::CloseRequested, .. } => {
 					*control_flow = ControlFlow::Exit;

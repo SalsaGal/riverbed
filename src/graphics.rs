@@ -1,6 +1,5 @@
 use polystrip::{Renderer, RenderSize, WindowTarget};
 use polystrip::gon::GonPipeline;
-use polystrip::math::Color;
 
 use winit::window::Window;
 
