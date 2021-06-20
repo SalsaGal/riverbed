@@ -1,11 +1,10 @@
-mod graphics;
-
+pub mod graphics;
 pub mod math;
-pub mod scene;
+pub mod layer;
 
 use crate::graphics::GraphicsHandler;
 use crate::math::Point;
-use crate::scene::Scene;
+use crate::layer::Layer;
 
 use winit::dpi::{LogicalSize, Size};
 use winit::event::{Event, WindowEvent};
@@ -16,11 +15,11 @@ pub struct Game {
 	event_loop: EventLoop<()>,
 	window: Window,
 
-	scenes: Vec<Box<dyn Scene>>,
+	scenes: Vec<Box<dyn Layer>>,
 }
 
 impl Game {
-	pub fn new(title: &str, size: WindowSize, scene: Box<dyn Scene>) -> Self {
+	pub fn new(title: &str, size: WindowSize, scene: Box<dyn Layer>) -> Self {
 		let event_loop = EventLoop::new();
 		let mut window = WindowBuilder::new().with_title(title).with_resizable(false);
 		window = match size {
@@ -46,7 +45,7 @@ impl Game {
 		self.event_loop.run(move |event, _, control_flow| {
 			match event {
 				Event::MainEventsCleared => {
-					graphics.update();
+					let mut canvas = graphics.canvas();
 
 					// Update scenes
 					for scene in scenes.iter_mut() {
@@ -55,7 +54,7 @@ impl Game {
 
 					// Render scenes
 					for scene in scenes.iter_mut() {
-						scene.render();
+						scene.render(&mut canvas);
 					}
 				},
 				Event::WindowEvent { event: WindowEvent::CloseRequested, .. } => {

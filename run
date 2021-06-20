@@ -3,5 +3,5 @@
 #/
 
 #-
-	cargo run --example window
+	cargo run --example rendering
 #/

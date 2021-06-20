@@ -1,7 +1,7 @@
 use riverbed::{Game, WindowSize};
-use riverbed::scene::EmptyScene;
+use riverbed::layer::EmptyLayer;
 
 fn main() {
-	let game = Game::new("Window", WindowSize::Fullscreen, Box::new(EmptyScene));
+	let game = Game::new("Window", WindowSize::Fullscreen, Box::new(EmptyLayer));
 	game.run();
 }
