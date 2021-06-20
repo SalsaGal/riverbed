@@ -1,5 +1,8 @@
+mod graphics;
+
 pub mod math;
 
+use crate::graphics::GraphicsHandler;
 use crate::math::Point;
 
 use winit::dpi::{LogicalSize, Size};
@@ -31,8 +34,13 @@ impl Game {
 
 	pub fn run(self) {
 		let window = self.window;
+		let mut graphics = GraphicsHandler::new(&window);
+
 		self.event_loop.run(move |event, _, control_flow| {
 			match event {
+				Event::MainEventsCleared => {
+					graphics.update();
+				},
 				Event::WindowEvent { event: WindowEvent::CloseRequested, .. } => {
 					*control_flow = ControlFlow::Exit;
 				},
