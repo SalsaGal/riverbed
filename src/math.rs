@@ -11,7 +11,7 @@ impl<T> Point<T> {
 		}
 	}
 
-	pub fn square(w: T) -> Self {
+	pub fn square(w: T) -> Self where T: Copy {
 		Self {
 			x: w,
 			y: w,
