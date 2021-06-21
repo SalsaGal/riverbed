@@ -11,10 +11,10 @@ fn main() {
 struct Display;
 
 impl Layer for Display {
-	fn render(&mut self, graphics: &mut GraphicsHandler, _: &mut TextureCache) {
-		let texture = graphics.texture_from_file("examples/rendering/test.png");
+	fn render(&mut self, graphics: &mut GraphicsHandler, texture_cache: &mut TextureCache) {
+		let texture = texture_cache.push(graphics.texture_from_file("examples/rendering/test.png"));
 		let mut canvas = graphics.canvas();
 		canvas.fill_rect(Rect::new(64, 64, 128, 192), Color::RED);
-		canvas.draw_texture(Rect::new(0, 0, 192, 64), &texture);
+		canvas.draw_texture(Rect::new(0, 0, 192, 64), texture_cache.get(texture).unwrap());
 	}
 }
