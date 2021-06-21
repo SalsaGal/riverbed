@@ -4,6 +4,8 @@ use polystrip::math::{Color, Matrix4, Rect};
 use polystrip::pixel::PixelTranslator;
 
 use std::collections::HashMap;
+use std::fs::File;
+use std::io::Read;
 
 use winit::window::Window;
 
@@ -11,12 +13,31 @@ const RECT_INDICES: [[u16; 3]; 2] = [[0, 3, 1], [1, 3, 2]];
 
 type TextureID = usize;
 
+pub struct TextureCache {
+	cache: HashMap<TextureID, Texture>,
+}
+
+impl TextureCache {
+	pub fn new() -> Self {
+		Self {
+			cache: HashMap::new(),
+		}
+	}
+
+	pub fn get(&self, id: TextureID) -> Option<&Texture> {
+		self.cache.get(&id)
+	}
+
+	pub fn push(&mut self, texture: Texture) -> TextureID {
+		self.cache.insert(self.cache.len(), texture);
+		self.cache.len() - 1
+	}
+}
+
 pub struct GraphicsHandler {
 	renderer: WindowTarget,
 	pipeline: GonPipeline,
 	pixel_translator: PixelTranslator,
-
-	texture_cache: HashMap<TextureID, Texture>,
 }
 
 impl GraphicsHandler {
@@ -30,22 +51,22 @@ impl GraphicsHandler {
 			renderer,
 			pipeline,
 			pixel_translator,
-
-			texture_cache: HashMap::new(),
 		}
 	}
 
 	pub fn canvas(&mut self) -> Canvas {
-		Canvas::new(self.renderer.next_frame().render_with(&mut self.pipeline), &self.pixel_translator)
+		Canvas {
+			frame: self.renderer.next_frame().render_with(&mut self.pipeline),
+			pixel_translator: &self.pixel_translator,
+		}
 	}
 
-	pub fn get_texture(&mut self, id: TextureID) -> Option<&Texture> {
-		self.texture_cache.get(&id)
-	}
-
-	pub fn load_texture(&mut self, texture: Texture) -> TextureID {
-		self.texture_cache.insert(self.texture_cache.len(), texture);
-		self.texture_cache.len() - 1
+	pub fn load_image(&mut self, path: &str) -> Texture {
+		let mut file = File::open(path).unwrap();
+		let mut bytes = Vec::new();
+		file.read_to_end(&mut bytes).unwrap();
+		let img = image::load_from_memory(&bytes[..]).unwrap().to_rgba8();
+		Texture::new_from_rgba(&self.renderer, &*img, img.dimensions())
 	}
 }
 
@@ -55,13 +76,6 @@ pub struct Canvas<'canvas> {
 }
 
 impl<'canvas> Canvas<'canvas> {
-	fn new(frame: GonFrame<'canvas>, pixel_translator: &'canvas PixelTranslator) -> Self {
-		Self {
-			frame,
-			pixel_translator,
-		}
-	}
-
 	pub fn fill_rect(&mut self, bounds: Rect, color: Color) {
 		self.frame.draw_colored(
 			&ColoredShape {

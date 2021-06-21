@@ -6,6 +6,7 @@ use crate::graphics::GraphicsHandler;
 use crate::math::Point;
 use crate::layer::Layer;
 
+use graphics::TextureCache;
 use winit::dpi::{LogicalSize, Size};
 use winit::event::{Event, WindowEvent};
 use winit::event_loop::{ControlFlow, EventLoop};
@@ -40,13 +41,12 @@ impl Game {
 	pub fn run(self) {
 		let window = self.window;
 		let mut graphics = GraphicsHandler::new(&window);
+		let mut texture_cache = TextureCache::new();
 		let mut scenes = self.scenes;
 
 		self.event_loop.run(move |event, _, control_flow| {
 			match event {
 				Event::MainEventsCleared => {
-					let mut canvas = graphics.canvas();
-
 					// Update scenes
 					for scene in scenes.iter_mut() {
 						scene.update();
@@ -54,7 +54,7 @@ impl Game {
 
 					// Render scenes
 					for scene in scenes.iter_mut() {
-						scene.render(&mut canvas);
+						scene.render(&mut graphics, &mut texture_cache);
 					}
 				},
 				Event::WindowEvent { event: WindowEvent::CloseRequested, .. } => {
