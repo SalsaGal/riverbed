@@ -65,7 +65,11 @@ impl GraphicsHandler {
 		let mut file = File::open(path).unwrap();
 		let mut bytes = Vec::new();
 		file.read_to_end(&mut bytes).unwrap();
-		let img = image::load_from_memory(&bytes[..]).unwrap().to_rgba8();
+		self.texture_from_data(bytes)
+	}
+
+	pub fn texture_from_data(&mut self, data: Vec<u8>) -> Texture {
+		let img = image::load_from_memory(&data[..]).unwrap().to_rgba8();
 		Texture::new_from_rgba(&self.renderer, &*img, img.dimensions())
 	}
 }
