@@ -61,7 +61,7 @@ impl GraphicsHandler {
 		}
 	}
 
-	pub fn load_image(&mut self, path: &str) -> Texture {
+	pub fn texture_from_file(&mut self, path: &str) -> Texture {
 		let mut file = File::open(path).unwrap();
 		let mut bytes = Vec::new();
 		file.read_to_end(&mut bytes).unwrap();
