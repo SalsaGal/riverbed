@@ -69,7 +69,10 @@ impl Game {
 					window.set_fullscreen(Some(Fullscreen::Borderless(None)));
 				},
 				Event::WindowEvent { event: WindowEvent::KeyboardInput { input: event, .. }, .. } => {
-					input.handle(event);
+					input.handle_key(event);
+				},
+				Event::WindowEvent { event: WindowEvent::CursorMoved { position, .. }, ..} => {
+					input.mouse_pos = Point::new(position.x as u16, position.y as u16);
 				},
 				_ => {},
 			}

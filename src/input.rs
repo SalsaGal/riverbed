@@ -1,19 +1,25 @@
+use crate::math::Point;
+
 use std::collections::HashMap;
 
 use winit::event::{ElementState, KeyboardInput, ScanCode};
 
 pub struct InputHandler {
 	keys: HashMap<ScanCode, InputState>,
+
+	pub mouse_pos: Point<u16>,
 }
 
 impl InputHandler {
 	pub fn new() -> Self {
 		Self {
 			keys: HashMap::new(),
+
+			mouse_pos: Point::origin(),
 		}
 	}
 
-	pub fn handle(&mut self, event: KeyboardInput) {
+	pub fn handle_key(&mut self, event: KeyboardInput) {
 		self.keys.insert(event.scancode, match event.state {
 			ElementState::Pressed => if !matches!(self.keys.get(&event.scancode), Some(InputState::Down)) {
 				InputState::Pressed

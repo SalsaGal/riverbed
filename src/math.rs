@@ -1,11 +1,12 @@
 pub use polystrip::math::*;
 
-pub struct Point<T> {
+#[derive(Clone, Copy, Debug)]
+pub struct Point<T> where T: Clone + Copy {
 	pub x: T,
 	pub y: T,
 }
 
-impl<T> Point<T> {
+impl<T> Point<T> where T: Clone + Copy {
 	pub fn new(x: T, y: T) -> Self {
 		Self {
 			x,
@@ -17,6 +18,13 @@ impl<T> Point<T> {
 		Self {
 			x: w,
 			y: w,
+		}
+	}
+
+	pub fn origin() -> Self where T: Default {
+		Self {
+			x: T::default(),
+			y: T::default(),
 		}
 	}
 }
