@@ -55,8 +55,11 @@ impl GraphicsHandler {
 	}
 
 	pub fn canvas(&mut self) -> Canvas {
+		let mut frame = self.renderer.next_frame().render_with(&mut self.pipeline); 
+		frame.clear(Color::BLACK);
+
 		Canvas {
-			frame: self.renderer.next_frame().render_with(&mut self.pipeline),
+			frame,
 			pixel_translator: &self.pixel_translator,
 		}
 	}

@@ -1,12 +1,13 @@
+pub mod input;
 pub mod graphics;
 pub mod math;
 pub mod layer;
 
-use crate::graphics::GraphicsHandler;
+use crate::graphics::{GraphicsHandler, TextureCache};
+use crate::input::InputHandler;
 use crate::math::Point;
 use crate::layer::Layer;
 
-use graphics::TextureCache;
 use winit::dpi::{LogicalSize, Size};
 use winit::event::{Event, WindowEvent};
 use winit::event_loop::{ControlFlow, EventLoop};
@@ -41,6 +42,7 @@ impl Game {
 	pub fn run(self) {
 		let window = self.window;
 		let mut graphics = GraphicsHandler::new(&window);
+		let mut input = InputHandler::new();
 		let mut texture_cache = TextureCache::new();
 		let mut scenes = self.scenes;
 
@@ -49,19 +51,25 @@ impl Game {
 				Event::MainEventsCleared => {
 					// Update scenes
 					for scene in scenes.iter_mut() {
-						scene.update();
+						scene.update(&input);
 					}
 
 					// Render scenes
 					for scene in scenes.iter_mut() {
 						scene.render(&mut graphics, &mut texture_cache);
 					}
+
+					// Update engine
+					input.update();
 				},
 				Event::WindowEvent { event: WindowEvent::CloseRequested, .. } => {
 					*control_flow = ControlFlow::Exit;
 				},
 				Event::WindowEvent { event: WindowEvent::Resized(_), .. } => {
 					window.set_fullscreen(Some(Fullscreen::Borderless(None)));
+				},
+				Event::WindowEvent { event: WindowEvent::KeyboardInput { input: event, .. }, .. } => {
+					input.handle(event);
 				},
 				_ => {},
 			}
