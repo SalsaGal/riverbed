@@ -4,7 +4,10 @@ use riverbed::math::{Color, Point, Rect};
 use riverbed::layer::*;
 
 fn main() {
-	let game = Game::new("Window", WindowSize::Windowed(Point::new(640, 480)), Box::new(Display::new()));
+	let game = Game::new("Window", WindowSize::Windowed(Point::new(640, 480)), Box::new(Display::new()))
+		.render_frame_limit(60)
+		.update_frame_limit(60);
+
 	game.run();
 }
 

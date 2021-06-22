@@ -8,6 +8,8 @@ use crate::input::InputHandler;
 use crate::math::Point;
 use crate::layer::*;
 
+use std::time::{Duration, Instant};
+
 use winit::dpi::{LogicalSize, Size};
 use winit::event::{Event, WindowEvent};
 use winit::event_loop::{ControlFlow, EventLoop};
@@ -18,6 +20,12 @@ pub struct Game {
 	window: Window,
 
 	scenes: Vec<Box<dyn Layer>>,
+
+	render_frame_limit: Option<Duration>,
+	update_frame_limit: Option<Duration>,
+
+	next_render: Instant,
+	next_update: Instant,
 }
 
 impl Game {
@@ -36,7 +44,23 @@ impl Game {
 			window,
 
 			scenes: vec![scene],
+
+			render_frame_limit: None,
+			update_frame_limit: None,
+
+			next_render: Instant::now(),
+			next_update: Instant::now(),
 		}
+	}
+
+	pub fn render_frame_limit(mut self, framerate: u16) -> Self {
+		self.render_frame_limit = Some(Duration::from_millis(1000 / framerate as u64));
+		self
+	}
+
+	pub fn update_frame_limit(mut self, framerate: u16) -> Self {
+		self.update_frame_limit = Some(Duration::from_millis(1000 / framerate as u64));
+		self
 	}
 
 	pub fn run(self) {
@@ -45,6 +69,10 @@ impl Game {
 		let mut input = InputHandler::new();
 		let mut texture_cache = TextureCache::new();
 		let mut scenes = self.scenes;
+		let render_frame_limit = self.render_frame_limit;
+		let update_frame_limit = self.update_frame_limit;
+		let mut next_render = self.next_render;
+		let mut next_update = self.next_update;
 
 		for scene in scenes.iter_mut() {
 			scene.init(&mut LayerData {
@@ -63,14 +91,20 @@ impl Game {
 						texture_cache: &mut texture_cache,
 					};
 					
-					// Update scenes
-					for scene in scenes.iter_mut() {
-						scene.update(&mut layer_data);
+					if matches!(Instant::now().checked_duration_since(next_update), Some(_)) {
+						// Update scenes
+						for scene in scenes.iter_mut() {
+							scene.update(&mut layer_data);
+						}
+						next_update += update_frame_limit.unwrap_or_default();
 					}
 
-					// Render scenes
-					for scene in scenes.iter_mut() {
-						scene.render(&mut layer_data);
+					if matches!(Instant::now().checked_duration_since(next_render), Some(_)) {
+						// Render scenes
+						for scene in scenes.iter_mut() {
+							scene.render(&mut layer_data);
+						}
+						next_render += render_frame_limit.unwrap_or_default();
 					}
 
 					// Update engine
