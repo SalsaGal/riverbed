@@ -6,7 +6,7 @@ pub mod layer;
 use crate::graphics::{GraphicsHandler, TextureCache};
 use crate::input::InputHandler;
 use crate::math::Point;
-use crate::layer::Layer;
+use crate::layer::*;
 
 use winit::dpi::{LogicalSize, Size};
 use winit::event::{Event, WindowEvent};
@@ -47,20 +47,30 @@ impl Game {
 		let mut scenes = self.scenes;
 
 		for scene in scenes.iter_mut() {
-			scene.init(&mut graphics, &mut texture_cache);
+			scene.init(&mut LayerData {
+				graphics: &mut graphics,
+				input: &input,
+				texture_cache: &mut texture_cache,
+			});
 		}
 
 		self.event_loop.run(move |event, _, control_flow| {
 			match event {
 				Event::MainEventsCleared => {
+					let mut layer_data = LayerData {
+						graphics: &mut graphics,
+						input: &input,
+						texture_cache: &mut texture_cache,
+					};
+					
 					// Update scenes
 					for scene in scenes.iter_mut() {
-						scene.update(&input);
+						scene.update(&mut layer_data);
 					}
 
 					// Render scenes
 					for scene in scenes.iter_mut() {
-						scene.render(&mut graphics, &mut texture_cache);
+						scene.render(&mut layer_data);
 					}
 
 					// Update engine
