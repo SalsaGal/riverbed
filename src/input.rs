@@ -15,7 +15,11 @@ impl InputHandler {
 
 	pub fn handle(&mut self, event: KeyboardInput) {
 		self.keys.insert(event.scancode, match event.state {
-			ElementState::Pressed => InputState::Pressed,
+			ElementState::Pressed => if !matches!(self.keys.get(&event.scancode), Some(InputState::Down)) {
+				InputState::Pressed
+			} else {
+				InputState::Down
+			},
 			ElementState::Released => InputState::Released,
 		});
 	}
