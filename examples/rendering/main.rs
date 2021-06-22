@@ -24,17 +24,20 @@ impl Display {
 }
 
 impl Layer for Display {
+	fn init(&mut self, graphics: &mut GraphicsHandler, texture_cache: &mut TextureCache) {
+		texture_cache.push(graphics.texture_from_file("examples/rendering/test.png"));
+	}
+
 	fn update(&mut self, input: &InputHandler) {
 		self.down = input.key_is(49, InputState::Pressed);
 		self.mouse_pos = input.mouse_pos;
 	}
 
 	fn render(&mut self, graphics: &mut GraphicsHandler, texture_cache: &mut TextureCache) {
-		let texture = texture_cache.push(graphics.texture_from_file("examples/rendering/test.png"));
 		let mut canvas = graphics.canvas();
 		canvas.fill_rect(Rect::new(self.mouse_pos.x as i32, self.mouse_pos.y as i32, 128, 192), Color::RED);
 		if self.down {
-			canvas.draw_texture(Rect::new(0, 0, 192, 64), texture_cache.get(texture).unwrap());
+			canvas.draw_texture(Rect::new(0, 0, 192, 64), texture_cache.get(0).unwrap());
 		}
 	}
 }

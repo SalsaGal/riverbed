@@ -46,6 +46,10 @@ impl Game {
 		let mut texture_cache = TextureCache::new();
 		let mut scenes = self.scenes;
 
+		for scene in scenes.iter_mut() {
+			scene.init(&mut graphics, &mut texture_cache);
+		}
+
 		self.event_loop.run(move |event, _, control_flow| {
 			match event {
 				Event::MainEventsCleared => {
