@@ -18,7 +18,7 @@ impl InputHandler {
 			keys: HashMap::new(),
 			buttons: HashMap::new(),
 
-			mouse_pos: Point::origin(),
+			mouse_pos: Point::default(),
 		}
 	}
 

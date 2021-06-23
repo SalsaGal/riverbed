@@ -22,7 +22,7 @@ impl Display {
 	pub fn new() -> Self {
 		Self {
 			down: false,
-			mouse_pos: Point::origin(),
+			mouse_pos: Point::default(),
 			sound: None,
 		}
 	}
