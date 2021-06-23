@@ -1,8 +1,10 @@
+pub mod audio;
 pub mod input;
 pub mod graphics;
 pub mod math;
 pub mod layer;
 
+use crate::audio::AudioHandler;
 use crate::graphics::{GraphicsHandler, TextureCache};
 use crate::input::InputHandler;
 use crate::math::Point;
@@ -65,6 +67,7 @@ impl Game {
 
 	pub fn run(self) {
 		let window = self.window;
+		let mut audio = AudioHandler::new();
 		let mut graphics = GraphicsHandler::new(&window);
 		let mut input = InputHandler::new();
 		let mut texture_cache = TextureCache::new();
@@ -76,6 +79,7 @@ impl Game {
 
 		for scene in scenes.iter_mut() {
 			scene.init(&mut LayerData {
+				audio: &mut audio,
 				graphics: &mut graphics,
 				input: &input,
 				texture_cache: &mut texture_cache,
@@ -86,6 +90,7 @@ impl Game {
 			match event {
 				Event::MainEventsCleared => {
 					let mut layer_data = LayerData {
+						audio: &mut audio,
 						graphics: &mut graphics,
 						input: &input,
 						texture_cache: &mut texture_cache,

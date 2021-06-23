@@ -44,6 +44,6 @@ impl Layer for Display {
 		if self.down {
 			canvas.draw_texture(Rect::new(0, 0, 192, 64), data.texture_cache.get(0).unwrap());
 		}
-		canvas.draw_texture_angle(Rect::new(200, 0, 192, 64), data.texture_cache.get(0).unwrap(), std::f32::consts::TAU / 8.0);
+		canvas.draw_texture_angle(Rect::new(0, 0, 192, 64), data.texture_cache.get(0).unwrap(), std::f32::consts::TAU / 8.0);
 	}
 }
