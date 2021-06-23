@@ -122,6 +122,9 @@ impl Game {
 				Event::WindowEvent { event: WindowEvent::CursorMoved { position, .. }, ..} => {
 					input.mouse_pos = Point::new(position.x as u16, position.y as u16);
 				},
+				Event::WindowEvent { event: WindowEvent::MouseInput { button, state, .. }, .. } => {
+					input.handle_button(button, state);
+				},
 				_ => {},
 			}
 		});

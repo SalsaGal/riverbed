@@ -1,5 +1,5 @@
 use riverbed::{Game, WindowSize};
-use riverbed::input::InputState;
+use riverbed::input::{InputState, MouseButton};
 use riverbed::math::{Color, Point, Rect};
 use riverbed::layer::*;
 
@@ -33,6 +33,9 @@ impl Layer for Display {
 	fn update(&mut self, data: &mut LayerData) {
 		self.down = data.input.key_is(49, InputState::Pressed);
 		self.mouse_pos = data.input.mouse_pos;
+		if data.input.button_is(MouseButton::Left, InputState::Down) {
+			println!("Clicked");
+		}
 	}
 
 	fn render(&mut self, data: &mut LayerData) {
