@@ -104,12 +104,13 @@ impl<'canvas> Canvas<'canvas> {
 	}
 
 	pub fn draw_texture_angle(&mut self, bounds: Rect, texture: &'canvas Texture, angle: f32) {
-		self.frame.draw_textured(
-			&TexturedShape {
-				vertices: self.pixel_translator.textured_rect(bounds)[..].into(),
-				indices: RECT_INDICES[..].into()
-			},
-			&[(texture, &[Matrix4::rotate(angle)])],
-		);
+		todo!()
+		// self.frame.draw_textured(
+		// 	&TexturedShape {
+		// 		vertices: self.pixel_translator.textured_rect(bounds)[..].into(),
+		// 		indices: RECT_INDICES[..].into()
+		// 	},
+		// 	&[(texture, &[Matrix4::rotate(angle)])],
+		// );
 	}
 }
