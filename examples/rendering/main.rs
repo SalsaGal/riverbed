@@ -1,4 +1,5 @@
 use riverbed::{Game, WindowSize};
+use riverbed::audio::{AudioHandler, Sink};
 use riverbed::input::{InputState, MouseButton};
 use riverbed::math::{Color, Point, Rect};
 use riverbed::layer::*;
@@ -14,6 +15,7 @@ fn main() {
 struct Display {
 	down: bool,
 	mouse_pos: Point<u16>,
+	sound: Option<Sink>,
 }
 
 impl Display {
@@ -21,6 +23,7 @@ impl Display {
 		Self {
 			down: false,
 			mouse_pos: Point::origin(),
+			sound: None,
 		}
 	}
 }
@@ -28,6 +31,9 @@ impl Display {
 impl Layer for Display {
 	fn init(&mut self, data: &mut LayerData) {
 		data.texture_cache.push(data.graphics.texture_from_file("examples/rendering/test.png"));
+		self.sound = Some(data.audio.new_sink());
+		self.sound.as_ref().unwrap().append(AudioHandler::load_wav("examples/rendering/test.wav"));
+		self.sound.as_ref().unwrap().play();
 	}
 
 	fn update(&mut self, data: &mut LayerData) {
