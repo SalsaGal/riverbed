@@ -83,6 +83,10 @@ pub struct Canvas<'canvas> {
 }
 
 impl<'canvas> Canvas<'canvas> {
+	pub fn clear(&mut self, color: Color) {
+		self.frame.clear(color);
+	}
+
 	pub fn fill_rect(&mut self, bounds: Rect, color: Color) {
 		self.frame.draw_colored(
 			&ColoredShape {
@@ -101,16 +105,5 @@ impl<'canvas> Canvas<'canvas> {
 			},
 			&[(texture, &[Matrix4::identity()])],
 		);
-	}
-
-	pub fn draw_texture_angle(&mut self, bounds: Rect, texture: &'canvas Texture, angle: f32) {
-		todo!()
-		// self.frame.draw_textured(
-		// 	&TexturedShape {
-		// 		vertices: self.pixel_translator.textured_rect(bounds)[..].into(),
-		// 		indices: RECT_INDICES[..].into()
-		// 	},
-		// 	&[(texture, &[Matrix4::rotate(angle)])],
-		// );
 	}
 }
