@@ -61,6 +61,26 @@ impl InputHandler {
 		}
 	}
 
+	pub fn keys(&self, state: InputState) -> Vec<ScanCode> {
+		let mut to_ret = Vec::new();
+		for (key, key_state) in self.keys.iter() {
+			if *key_state == state {
+				to_ret.push(*key);
+			}
+		}
+		to_ret
+	}
+
+	pub fn buttons(&self, state: InputState) -> Vec<MouseButton> {
+		let mut to_ret = Vec::new();
+		for (button, button_state) in self.buttons.iter() {
+			if *button_state == state {
+				to_ret.push(*button);
+			}
+		}
+		to_ret
+	}
+
 	pub fn key_is(&self, key: ScanCode, state: InputState) -> bool {
 		*self.keys.get(&key).unwrap_or(&InputState::Up) == state
 	}
