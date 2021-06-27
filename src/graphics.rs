@@ -32,6 +32,10 @@ impl TextureCache {
 		self.cache.insert(self.cache.len(), texture);
 		self.cache.len() - 1
 	}
+
+	pub fn clear(&mut self) {
+		self.cache.clear()
+	}
 }
 
 pub struct GraphicsHandler {
