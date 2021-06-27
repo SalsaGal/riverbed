@@ -24,6 +24,10 @@ impl TextureCache {
 		}
 	}
 
+	pub fn insert(&mut self, id: TextureID, texture: Texture) -> Option<Texture> {
+		self.cache.insert(id, texture)
+	}
+
 	pub fn get(&self, id: TextureID) -> Option<&Texture> {
 		self.cache.get(&id)
 	}
