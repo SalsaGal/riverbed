@@ -11,7 +11,7 @@ use winit::window::Window;
 
 const RECT_INDICES: [[u16; 3]; 2] = [[0, 3, 1], [1, 3, 2]];
 
-type TextureID = usize;
+pub type TextureID = usize;
 
 pub struct TextureCache {
 	cache: HashMap<TextureID, Texture>,
