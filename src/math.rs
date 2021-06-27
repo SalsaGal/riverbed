@@ -1,6 +1,7 @@
 pub use polystrip::math::*;
 
 use std::ops::{Add, AddAssign, Sub, SubAssign, Mul, MulAssign, Div, DivAssign};
+use std::cmp::{max, min};
 
 #[derive(Clone, Copy, Debug)]
 pub struct Point<T> {
@@ -102,5 +103,20 @@ impl<T> DivAssign for Point<T> where T: DivAssign {
 	fn div_assign(&mut self, rhs: Self) {
 		self.x /= rhs.x;
 		self.y /= rhs.y;
+	}
+}
+
+pub fn rect_overlap(a: &Rect, b: &Rect) -> Option<Rect> {
+	let to_ret = Rect::new(
+		max(a.x, b.x),
+		max(a.y, b.y),
+		min(a.x + a.w, b.x + b.w) - max(a.x, b.x),
+		min(a.y + a.h, b.y + b.h) - max(a.y, b.y),
+	);
+	
+	if to_ret.w < 0 || to_ret.h < 0 {
+		None
+	} else {
+		Some(to_ret)
 	}
 }
