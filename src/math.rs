@@ -23,6 +23,13 @@ impl<T> Point<T> {
 			y: w,
 		}
 	}
+
+	pub fn into<U>(&self) -> Self where T: Copy, U: Into<T> {
+		Self {
+			x: self.x.into(),
+			y: self.y.into(),
+		}
+	}
 }
 
 impl<T> Default for Point<T> where T: Default {
