@@ -30,7 +30,7 @@ impl Display {
 
 impl Layer for Display {
 	fn init(&mut self, data: &mut LayerData) {
-		data.texture_cache.push(data.graphics.texture_from_file("examples/rendering/test.png"));
+		data.texture_cache.push(data.graphics.texture_from_file("examples/rendering/test.png").unwrap());
 		self.sound = Some(data.audio.new_sink());
 		self.sound.as_ref().unwrap().append(AudioHandler::load_wav("examples/rendering/test.wav"));
 		self.sound.as_ref().unwrap().play();

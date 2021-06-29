@@ -72,11 +72,14 @@ impl GraphicsHandler {
 		}
 	}
 
-	pub fn texture_from_file(&mut self, path: &str) -> Texture {
-		let mut file = File::open(path).unwrap();
-		let mut bytes = Vec::new();
-		file.read_to_end(&mut bytes).unwrap();
-		self.texture_from_data(bytes)
+	pub fn texture_from_file(&mut self, path: &str) -> Result<Texture, ()> {
+		if let Ok(mut file) = File::open(path) {
+			let mut bytes = Vec::new();
+			file.read_to_end(&mut bytes).unwrap();
+			Ok(self.texture_from_data(bytes))
+		} else {
+			Err(())
+		}
 	}
 
 	pub fn texture_from_data(&mut self, data: Vec<u8>) -> Texture {
