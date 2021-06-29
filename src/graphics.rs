@@ -78,6 +78,7 @@ impl GraphicsHandler {
 			file.read_to_end(&mut bytes).unwrap();
 			Ok(self.texture_from_data(bytes))
 		} else {
+			eprintln!("Can't find file {}", path);
 			Err(())
 		}
 	}
