@@ -1,7 +1,7 @@
 use riverbed::{Game, WindowSize};
 use riverbed::audio::{AudioHandler, Sink};
-use riverbed::input::{InputState, MouseButton};
-use riverbed::math::{Color, Point, Rect};
+use riverbed::input::InputState;
+use riverbed::math::{Point, Rect};
 use riverbed::layer::*;
 
 fn main() {
@@ -16,6 +16,8 @@ struct Display {
 	down: bool,
 	mouse_pos: Point<u16>,
 	sound: Option<Sink>,
+
+	angle: f32,
 }
 
 impl Display {
@@ -24,6 +26,8 @@ impl Display {
 			down: false,
 			mouse_pos: Point::default(),
 			sound: None,
+
+			angle: 0.0,
 		}
 	}
 }
@@ -39,16 +43,11 @@ impl Layer for Display {
 	fn update(&mut self, data: &mut LayerData) {
 		self.down = data.input.key_is(49, InputState::Pressed);
 		self.mouse_pos = data.input.mouse_pos;
-		if data.input.button_is(MouseButton::Left, InputState::Down) {
-			println!("Clicked");
-		}
+		self.angle += std::f32::consts::TAU / 360.0;
 	}
 
 	fn render(&mut self, data: &mut LayerData) {
 		let mut canvas = data.graphics.canvas();
-		canvas.fill_rect(Rect::new(self.mouse_pos.x as i32, self.mouse_pos.y as i32, 128, 192), Color::RED);
-		if self.down {
-			canvas.draw_texture(Rect::new(0, 0, 192, 64), data.texture_cache.get(0).unwrap());
-		}
+		canvas.draw_texture(Rect::new(256, 128, 64, 64), self.angle, data.texture_cache.get(0).unwrap());
 	}
 }

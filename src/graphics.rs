@@ -109,13 +109,16 @@ impl<'canvas> Canvas<'canvas> {
 		);
 	}
 
-	pub fn draw_texture(&mut self, bounds: Rect, texture: &'canvas Texture) {
+	pub fn draw_texture(&mut self, bounds: Rect, angle: f32, texture: &'canvas Texture) {
+		let pos = self.pixel_translator.pixel_position(bounds.x, bounds.y);
+		let scale = self.pixel_translator.pixel_offset(bounds.w, bounds.h);
 		self.frame.draw_textured(
-			&TexturedShape {
-				vertices: self.pixel_translator.textured_rect(bounds)[..].into(),
-				indices: RECT_INDICES[..].into()
-			},
-			&[(texture, &[Matrix4::identity()])],
+			&TexturedShape::QUAD_FULL_FLAT,
+			&[(texture, &[
+				Matrix4::translate(pos) *
+				Matrix4::scale_nonuniform(scale.x as f32, scale.y as f32) *
+				Matrix4::rotate(-angle)
+			])],
 		);
 	}
 }
