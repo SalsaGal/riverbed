@@ -116,8 +116,8 @@ impl<'canvas> Canvas<'canvas> {
 			&TexturedShape::QUAD_FULL_FLAT,
 			&[(texture, &[
 				Matrix4::translate(pos) *
-				Matrix4::scale_nonuniform(scale.x as f32, scale.y as f32) *
-				Matrix4::rotate(-angle)
+				Matrix4::rotate(angle) *
+				Matrix4::scale_nonuniform(scale.x as f32, scale.y as f32)
 			])],
 		);
 	}

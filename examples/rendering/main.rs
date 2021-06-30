@@ -1,8 +1,8 @@
 use riverbed::{Game, WindowSize};
 use riverbed::audio::{AudioHandler, Sink};
 use riverbed::input::InputState;
-use riverbed::math::{Point, Rect};
 use riverbed::layer::*;
+use riverbed::math::{Color, Point, Rect};
 
 fn main() {
 	let game = Game::new("Window", WindowSize::Windowed(Point::new(640, 480)), Box::new(Display::new()))
@@ -35,6 +35,7 @@ impl Display {
 impl Layer for Display {
 	fn init(&mut self, data: &mut LayerData) {
 		data.texture_cache.push(data.graphics.texture_from_file("examples/rendering/test.png").unwrap());
+		data.texture_cache.push(data.graphics.texture_from_file("examples/rendering/spring.png").unwrap());
 		self.sound = Some(data.audio.new_sink());
 		self.sound.as_ref().unwrap().append(AudioHandler::load_wav("examples/rendering/test.wav"));
 		self.sound.as_ref().unwrap().play();
@@ -48,6 +49,8 @@ impl Layer for Display {
 
 	fn render(&mut self, data: &mut LayerData) {
 		let mut canvas = data.graphics.canvas();
+		canvas.clear(Color::GREEN);
 		canvas.draw_texture(Rect::new(256, 128, 64, 64), self.angle, data.texture_cache.get(0).unwrap());
+		canvas.draw_texture(Rect::new(330, 128, 64, 24), self.angle, data.texture_cache.get(1).unwrap());
 	}
 }
